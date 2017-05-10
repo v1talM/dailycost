@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view></router-view>
   </div>
 </template>
@@ -12,12 +11,50 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    font-size: 62.5%;
+    height: 100%;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
+  body{
+    font-size:10px;
+    font-size:1rem;
+    height: 100%;
+  }
+  #app {
+    background-color: #1D8CE0;
+    height: 100%;
+    display: flex;
+  }
+  .text-xs{
+    font-size: 1.2rem;
+  }
+  .text-sm{
+    font-size: 1.4rem;
+  }
+  .text-md{
+    font-size: 1.6rem;
+  }
+  .text-lg{
+    font-size: 1.8rem;
+  }
+  .text-hg{
+    font-size: 2rem;
+  }
+  .text-left{
+    text-align: left;
+  }
+  .text-right{
+    text-align: right;
+  }
+  .pull-left{
+    float: left;
+  }
+  .pull-right{
+    float: right;
+  }
 </style>
