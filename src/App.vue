@@ -25,6 +25,9 @@ export default {
     font-size:1rem;
     height: 100%;
   }
+  ::-webkit-input-placeholder{
+    color: #99A9BF;
+  }
   #app {
     background-color: #1D8CE0;
     height: 100%;
@@ -56,5 +59,8 @@ export default {
   }
   .pull-right{
     float: right;
+  }
+  .text-danger{
+    color: #f00;
   }
 </style>
