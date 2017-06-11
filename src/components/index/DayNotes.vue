@@ -17,7 +17,7 @@
             <div class="item" v-for="item in items">
               <div class="text-lg item-title">
                 <h3 >{{ item.type }}</h3>
-                <h3>{{ item.cost }}</h3>
+                <input class="item-cost" id="cost" readonly type="text" v-model="item.cost" autofocus>
               </div>
             </div>
             <div class="item-types" v-show="isEditItem">
@@ -203,6 +203,14 @@ export default {
             background-color: #ffffff
             display: flex
             justify-content: center
+            .item-cost
+              display: flex
+              outline: none
+              border: none
+              text-align: right
+              color: #99A9BF
+              font-size: 2.5rem
+              flex-basis: 100%
             .item-title-notice
               padding: 0 1.4rem
               display: flex

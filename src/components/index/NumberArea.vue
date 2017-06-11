@@ -8,11 +8,17 @@
       </div>
     </div>
     <div class="operation-area">
-      <div class="cell" style="justify-content: flex-end">
+      <div class="cell" style="justify-content: flex-end" v-show="! hasNumbers">
         <icon name="line-chart" width="3.5rem" height="3.5rem"></icon>
       </div>
-      <div class="cell" style="justify-content: flex-start">
+      <div class="cell" style="justify-content: flex-start" v-show="! hasNumbers">
         <p>收 入</p>
+      </div>
+      <div class="cell" v-show="hasNumbers" @click="costIncrease()">
+        <icon name="plus" width="2.5rem" height="2.5rem"></icon>
+      </div>
+      <div class="cell" v-show="hasNumbers" @click="costDecrease()">
+        <icon name="minus" width="2.5rem" height="2.5rem"></icon>
       </div>
       <div class="cell" @click="deleteItemCost()">
         <icon name="undo" width="2.5rem" height="2.5rem"></icon>
@@ -25,6 +31,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data () {
     return {
@@ -37,19 +44,43 @@ export default {
       dot: false
     }
   },
+  computed: {
+    ...mapState({
+      items: state => state.items.items
+    }),
+    hasNumbers () {
+      if(this.items[0] == null || this.items[0].cost === '0')
+        return false
+      else {
+        return true
+      }
+    }
+  },
   methods: {
     numberClick (number) {
-      if(number == '.' && this.dot){
-        return false;
+      if(number === '.'){
+        if(this.dot){
+          return false
+        }else{
+          this.dot = true
+          this.$store.dispatch('setItemCost', number)
+        }
       }else{
-        this.dot = true
-      }
-      if(number !== null){
-        this.$store.dispatch('setItemCost', number)
+        if(number !== null){
+          this.$store.dispatch('setItemCost', number)
+        }
       }
     },
     deleteItemCost () {
+      const op = this.items[0].cost
+      if(op.charAt(op.length - 1) === '.'){
+        this.dot = false
+      }
       this.$store.dispatch('delItemCost')
+    },
+    costIncrease () {
+      this.dot = false
+      this.$store.dispatch('setItemCost', '+')
     }
   }
 }

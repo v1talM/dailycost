@@ -37,6 +37,15 @@ const actions = {
     commit('push_item', item)
   },
   setItemCost ({commit}, cost) {
+    var range, el = document.getElementById('cost');
+    if (el.setSelectionRange) {
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length)
+    } else {
+      range = el.createTextRange();
+      range.collapse(false);
+      range.select();
+    }
     commit('set_item_cost', cost)
   }
 }
