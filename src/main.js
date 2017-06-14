@@ -10,6 +10,8 @@ import store from './store'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 
+require('sweetalert2/dist/sweetalert2.css')
+
 Vue.component('icon', Icon)
 
 Vue.config.productionTip = false

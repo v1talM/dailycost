@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'app'
 }
@@ -62,5 +63,8 @@ export default {
   }
   .text-danger{
     color: #f00;
+  }
+  .text-primary{
+      color: #20a0ff;
   }
 </style>

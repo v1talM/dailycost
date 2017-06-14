@@ -34,7 +34,7 @@
                       </el-button>
                     </div>
                     <div class="column">
-                      <input type="text" class="note-input" :placeholder="'备注: ' + activeItem.name">
+                      <input type="text" class="note-input" :placeholder="'备注: ' + activeItem.name" v-model="items[0].note">
                     </div>
                   </div>
                 </el-carousel-item>
@@ -86,6 +86,22 @@ export default {
     }),
     noteHeight () {
       return this.c.y >= 180 ? '0': this.c.y - 180 + 'px'
+    }
+  },
+  watch: {
+    isEditItem () {
+        if(this.isEditItem === false){
+            const height = $(".timeline").outerHeight() + $(".day-cost-tags").outerHeight()
+            const drag_container = document.querySelector('.drag-container')
+            Dynamics.animate(drag_container, {
+              translateY:  0
+            }, {
+              type: Dynamics.spring,
+              duration: 1500,
+              frequency: 1,
+              friction: 171
+            })
+        }
     }
   },
   methods: {

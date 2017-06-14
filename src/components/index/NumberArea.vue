@@ -24,7 +24,13 @@
         <icon name="undo" width="2.5rem" height="2.5rem"></icon>
       </div>
       <div class="cell">
-        <icon class="text-danger" name="remove" width="2.5rem" height="2.5rem"></icon>
+        <icon v-show="items[0] && items[0].cost === '0'" class="text-danger" name="remove" width="2.5rem" height="2.5rem"></icon>
+        <div class="" @click="calc()">
+            <icon  v-show="needCheck && hasChecked" class="text-primary"  name="check" width="2.5rem" height="2.5rem"></icon>
+        </div>
+        <div class="" @click="tagged()">
+            <icon v-show="isMarked"  class="text-primary"  name="bookmark-o" width="2.5rem" height="2.5rem"></icon>
+        </div>
       </div>
     </div>
   </div>
@@ -32,6 +38,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import swal from 'sweetalert2'
 export default {
   data () {
     return {
@@ -41,7 +48,9 @@ export default {
         [7, 8, 9],
         [null, 0, '.']
       ],
-      dot: false
+      dot: false,
+      isMarked: false,
+      needCheck: true
     }
   },
   computed: {
@@ -49,27 +58,42 @@ export default {
       items: state => state.items.items
     }),
     hasNumbers () {
-      if(this.items[0] == null || this.items[0].cost === '0')
+      if(this.items[0] == null || this.items[0].cost == '0' )
         return false
       else {
         return true
       }
+    },
+    hasChecked () {
+        var op = this.items[0]
+        if(op == null || op.cost == 0)
+            return false
+        var reg = /[\+|\-|\.]/
+        if(reg.test(op.cost.charAt(op.cost.length - 1))){
+            return false
+        }else{
+            return true
+        }
     }
   },
   methods: {
     numberClick (number) {
-      if(number === '.'){
-        if(this.dot){
-          return false
+        const op = this.items[0].cost
+        this.needCheck = true
+        if(number === '.'){
+            if(this.dot){
+                return false
+            }else if(op.charAt(op.length - 1) == '+' || op.charAt(op.length - 1) == '-'){
+                return false
+            }else{
+                this.dot = true
+                this.$store.dispatch('setItemCost', number)
+            }
         }else{
-          this.dot = true
-          this.$store.dispatch('setItemCost', number)
+            if(number !== null){
+                this.$store.dispatch('setItemCost', number)
+            }
         }
-      }else{
-        if(number !== null){
-          this.$store.dispatch('setItemCost', number)
-        }
-      }
     },
     deleteItemCost () {
       const op = this.items[0].cost
@@ -79,8 +103,39 @@ export default {
       this.$store.dispatch('delItemCost')
     },
     costIncrease () {
-      this.dot = false
-      this.$store.dispatch('setItemCost', '+')
+        const op = this.items[0].cost
+        if(op.charAt(op.length - 1) == '+' || op.charAt(op.length - 1) == '-' || op.charAt(op.length - 1) == '.'){
+            return false
+        }else{
+            this.dot = false
+            this.$store.dispatch('setItemCost', '+')
+        }
+
+    },
+    costDecrease () {
+        const op = this.items[0].cost
+        if(op.charAt(op.length - 1) == '+' || op.charAt(op.length - 1) == '-' || op.charAt(op.length - 1) == '.'){
+            return false
+        }else{
+            this.dot = false
+            this.$store.dispatch('setItemCost', '-')
+        }
+    },
+    calc () {
+        const op = this.items[0].cost
+        const vm = this
+        try{
+            eval(op)
+        }catch(err){
+            swal('','请输入正确的数字!','error')
+            return false
+        }
+        this.isMarked = true
+        this.needCheck = false
+        this.$store.dispatch('calCost')
+    },
+    tagged () {
+        this.$store.dispatch('setEditItem', false)
     }
   }
 }

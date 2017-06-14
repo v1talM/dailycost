@@ -23,7 +23,10 @@ const mutations = {
   },
   push_item (state, item) {
     state.items.push(item)
-  }
+   },
+  calculate_cost (state) {
+      state.items[0].cost = eval(state.items[0].cost).toString()
+  },
 }
 
 const actions = {
@@ -47,7 +50,10 @@ const actions = {
       range.select();
     }
     commit('set_item_cost', cost)
-  }
+  },
+  calCost ({commit}) {
+      commit('calculate_cost')
+  },
 }
 
 export default {
