@@ -33,6 +33,7 @@ export default {
     background-color: #1D8CE0;
     height: 100%;
     display: flex;
+    overflow-y: scroll;
   }
   .text-xs{
     font-size: 1.2rem;

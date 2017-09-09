@@ -1,6 +1,7 @@
 const state = {
   isEditItem: false,
-  items: []
+  items: [],
+  activeItem:  { type: 'tag', name: '一 般' }
 }
 
 const mutations = {
@@ -22,11 +23,22 @@ const mutations = {
     }
   },
   push_item (state, item) {
-    state.items.push(item)
+    state.items.unshift(item)
    },
   calculate_cost (state) {
-      state.items[0].cost = eval(state.items[0].cost).toString()
+      state.items[0].cost = eval(state.items[0].cost).toFixed(2) > 0.00?eval(state.items[0].cost).toFixed(2) .toString():parseFloat(0).toFixed(2)
   },
+  pop_item (state) {
+      var i = state.items.shift()
+  },
+  set_active_type(state, type) {
+      state.activeItem.type = type.type
+      state.activeItem.name = type.name
+  },
+  commit_type(state) {
+      state.items[0].type = state.activeItem.type
+      state.items[0].name = state.activeItem.name
+  }
 }
 
 const actions = {
@@ -38,6 +50,9 @@ const actions = {
   },
   pushItem ({commit}, item) {
     commit('push_item', item)
+  },
+  popItem ({commit}) {
+    commit('pop_item')
   },
   setItemCost ({commit}, cost) {
     var range, el = document.getElementById('cost');
@@ -54,6 +69,12 @@ const actions = {
   calCost ({commit}) {
       commit('calculate_cost')
   },
+  setActive({commit}, type) {
+      commit('set_active_type', type)
+  },
+  commitType({commit}) {
+      commit('commit_type')
+  }
 }
 
 export default {

@@ -14,12 +14,6 @@
             <div class="item">
               <h3 class="text-lg item-title-notice">新增一条开销</h3>
             </div>
-            <div class="item" v-for="item in items">
-              <div class="text-lg item-title">
-                <h3 >{{ item.type }}</h3>
-                <input class="item-cost" id="cost" readonly type="text" v-model="item.cost" autofocus>
-              </div>
-            </div>
             <div class="item-types" v-show="isEditItem">
               <el-carousel indicator-position="outside" arrow="never" :autoplay="false" trigger="click">
                 <el-carousel-item v-for="types in item_types" :key="types">
@@ -34,12 +28,19 @@
                       </el-button>
                     </div>
                     <div class="column">
-                      <input type="text" class="note-input" :placeholder="'备注: ' + activeItem.name" v-model="items[0].note">
+                      <input type="text" class="note-input" :placeholder="'备注: ' + activeItem.name" v-if="items[0]" v-model="items[0].note">
                     </div>
                   </div>
                 </el-carousel-item>
               </el-carousel>
             </div>
+            <div class="item" v-for="item in items">
+              <div class="text-lg item-title">
+                  <el-tag v-show="item.name">{{ item.name}}</el-tag>
+                <input class="item-cost" id="cost" readonly type="text" v-model="item.cost" autofocus>
+              </div>
+            </div>
+
             <svg width="100%" height="2.4rem" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
              <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
              <g>
@@ -72,17 +73,14 @@ export default {
       c: { x: 0, y: 0 },
       // record drag start point
       start: { x: 0, y: 0 },
-      item_types: [],
-      activeItem: {}
+      item_types: []
     }
-  },
-  mounted () {
-    this.activeItem = { type: 'tag', name: '一 般' }
   },
   computed: {
     ...mapState({
       isEditItem: state => state.items.isEditItem,
-      items: state => state.items.items
+      items: state => state.items.items,
+      activeItem: state => state.items.activeItem
     }),
     noteHeight () {
       return this.c.y >= 180 ? '0': this.c.y - 180 + 'px'
@@ -106,7 +104,7 @@ export default {
   },
   methods: {
     startDrag: function (e) {
-        if(this.items[0]){
+        if(this.isEditItem){
           return false;
         }
         e = e.changedTouches ? e.changedTouches[0] : e
@@ -115,9 +113,9 @@ export default {
         this.start.y = e.pageY
     },
     onDrag: function (e) {
-      if(this.items[0]){
-        return false;
-      }
+        if(this.isEditItem){
+          return false;
+        }
       e = e.changedTouches ? e.changedTouches[0] : e
       if (this.dragging) {
         this.c.x = 160 + (e.pageX - this.start.x)
@@ -128,14 +126,14 @@ export default {
       }
     },
     stopDrag: function () {
-      if(this.items[0]){
-        return false;
-      }
+        if(this.isEditItem){
+          return false;
+        }
       if (this.dragging) {
         this.dragging = false
         const vm = this
         if(this.c.y >= 72){
-          const item = { cost: '0' }
+          const item = { cost: '0'}
           this.$store.dispatch('pushItem', item);
           Dynamics.animate(this.c, {
             x: 0,
@@ -161,10 +159,11 @@ export default {
     editItem () {
       this.item_types = item_types
       this.$store.dispatch('setEditItem', true)
-      const height = $(".timeline").outerHeight() + $(".day-cost-tags").outerHeight()
+      const item_count = this.items.length
+      const height =item_count >=4 ?-(4*11.5)  :item_count >= 3? (item_count - 2)  * 72  - 119.5 : - 119.5
       const drag_container = document.querySelector('.drag-container')
       Dynamics.animate(drag_container, {
-        translateY: - height
+        translateY: height
       }, {
         type: Dynamics.spring,
         duration: 1500,
@@ -176,7 +175,7 @@ export default {
      $(e.currentTarget).parent().siblings().children().removeClass('active')
      $(e.currentTarget).siblings().removeClass('active')
      $(e.currentTarget).addClass('active')
-     this.activeItem = type
+     this.$store.dispatch('setActive', type)
     }
   }
 }
@@ -187,8 +186,11 @@ export default {
     padding: 0 1rem 1rem 1rem
     flex: 2
     z-index: 1000
+    overflow-y: hidden
     .svg-container
       padding: 1rem
+      height: 100%
+      overflow-y: hidden
       .svg-background
         margin: 0 -1rem
         border: .75rem solid #324057
@@ -198,7 +200,8 @@ export default {
       .svg-note
         position: relative
         top: calc(-.75rem - 1px)
-        overflow: hidden
+        overflow-y: scroll
+        height: 100%
         .note
           width: 100%
           transform: translateY(-15rem)
@@ -241,6 +244,7 @@ export default {
               color: #99A9BF
               width: 100%
               justify-content: space-between
+              align-items: center
               h3
                 display: flex
                 align-self: center

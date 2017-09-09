@@ -24,13 +24,15 @@
         <icon name="undo" width="2.5rem" height="2.5rem"></icon>
       </div>
       <div class="cell">
-        <icon v-show="items[0] && items[0].cost === '0'" class="text-danger" name="remove" width="2.5rem" height="2.5rem"></icon>
-        <div class="" @click="calc()">
-            <icon  v-show="needCheck && hasChecked" class="text-primary"  name="check" width="2.5rem" height="2.5rem"></icon>
-        </div>
-        <div class="" @click="tagged()">
-            <icon v-show="isMarked"  class="text-primary"  name="bookmark-o" width="2.5rem" height="2.5rem"></icon>
-        </div>
+              <div class="" @click="removeItem()">
+                  <icon v-show="items[0] && items[0].cost === '0'" class="text-danger" name="remove" width="2.5rem" height="2.5rem"></icon>
+              </div>
+            <div class="" @click="calc()">
+                <icon  v-show="needCheck && hasChecked" class="text-primary"  name="check" width="2.5rem" height="2.5rem"></icon>
+            </div>
+            <div class="" @click="tagged()">
+                <icon v-show="isMarked && hasChecked"  class="text-primary"  name="bookmark-o" width="2.5rem" height="2.5rem"></icon>
+            </div>
       </div>
     </div>
   </div>
@@ -38,6 +40,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import Dynamics from 'dynamics.js/lib/dynamics.js'
 import swal from 'sweetalert2'
 export default {
   data () {
@@ -53,14 +56,53 @@ export default {
       needCheck: true
     }
   },
+  mounted () {
+      const height = $(".number-pad-container").outerHeight()
+      const number_pad_container = document.querySelector('.number-pad-container')
+      Dynamics.animate( number_pad_container, {
+        translateY:  height
+      }, {
+        type: Dynamics.spring,
+        duration: 1500,
+        frequency: 1,
+        friction: 171
+      })
+  },
+  watch: {
+      isEditItem () {
+          const height = $(".number-pad-container").outerHeight()
+          const number_pad_container = document.querySelector('.number-pad-container')
+          if(this.isEditItem === true){
+              Dynamics.animate( number_pad_container, {
+                translateY:  0
+              }, {
+                type: Dynamics.spring,
+                duration: 1500,
+                frequency: 1,
+                friction: 171
+              })
+          }else{
+              Dynamics.animate( number_pad_container, {
+                translateY:  height
+              }, {
+                type: Dynamics.spring,
+                duration: 1500,
+                frequency: 1,
+                friction: 171
+              })
+          }
+      }
+  },
   computed: {
     ...mapState({
-      items: state => state.items.items
+      items: state => state.items.items,
+      isEditItem: state => state.items.isEditItem
     }),
     hasNumbers () {
-      if(this.items[0] == null || this.items[0].cost == '0' )
+      if(this.items[0] == null || this.items[0].cost == '0' ){
+        this.isMarked = false
         return false
-      else {
+      }else {
         return true
       }
     },
@@ -70,6 +112,7 @@ export default {
             return false
         var reg = /[\+|\-|\.]/
         if(reg.test(op.cost.charAt(op.cost.length - 1))){
+            this.isMarked = false
             return false
         }else{
             return true
@@ -78,6 +121,9 @@ export default {
   },
   methods: {
     numberClick (number) {
+        if(this.isMarked){
+            return false;
+        }
         const op = this.items[0].cost
         this.needCheck = true
         if(number === '.'){
@@ -135,6 +181,12 @@ export default {
         this.$store.dispatch('calCost')
     },
     tagged () {
+        this.dot = false
+        this.$store.dispatch('commitType')
+        this.$store.dispatch('setEditItem', false)
+    },
+    removeItem () {
+        this.$store.dispatch('popItem')
         this.$store.dispatch('setEditItem', false)
     }
   }

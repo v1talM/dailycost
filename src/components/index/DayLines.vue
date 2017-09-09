@@ -28,7 +28,7 @@ export default {
     transformComponent () {
       const timeline_height = $(".timeline").outerHeight()
       Dynamics.animate(document.querySelector('.timeline'), {
-        translateY: - timeline_height
+        translateY: - 71.5625
       }, {
         type: Dynamics.spring,
         duration: 1500,
