@@ -1,7 +1,7 @@
 <template lang="html">
   <el-row type="flex" justify="center">
     <el-col :span="24" class="container">
-
+        <ichart></ichart>
     </el-col>
   </el-row>
 </template>
@@ -9,11 +9,15 @@
 <script>
 import {mapState} from 'vuex'
 import Dynamics from 'dynamics.js'
+import ichart from '@/components/index/Charts.vue'
 export default {
+    components: {
+        ichart
+    },
   computed: {
-    ...mapState({
-      isEditItem: state => state.items.isEditItem
-    })
+        ...mapState({
+          isEditItem: state => state.items.isEditItem
+      })
   },
   watch: {
     isEditItem () {

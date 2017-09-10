@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+
 import App from './App'
 import router from './router'
 import store from './store'
@@ -13,7 +14,6 @@ import Icon from 'vue-awesome/components/Icon'
 require('sweetalert2/dist/sweetalert2.css')
 
 Vue.component('icon', Icon)
-
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
