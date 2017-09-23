@@ -1,7 +1,7 @@
 const state = {
   isEditItem: false,
   items: [],
-  activeItem:  { type: 'tag', name: '一 般' }
+  activeItem:  { type: 'tag', name: '一 般', cost: 0 }
 }
 
 const mutations = {
@@ -33,11 +33,15 @@ const mutations = {
   },
   set_active_type(state, type) {
       state.activeItem.type = type.type
+      state.activeItem.cost = type.cost
       state.activeItem.name = type.name
   },
   commit_type(state) {
       state.items[0].type = state.activeItem.type
       state.items[0].name = state.activeItem.name
+  },
+  init_items(state, items){
+      state.items = items
   }
 }
 
@@ -74,6 +78,9 @@ const actions = {
   },
   commitType({commit}) {
       commit('commit_type')
+  },
+  initItems({commit}, items) {
+      commit('init_items', items)
   }
 }
 

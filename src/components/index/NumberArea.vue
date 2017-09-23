@@ -184,6 +184,24 @@ export default {
         this.dot = false
         this.$store.dispatch('commitType')
         this.$store.dispatch('setEditItem', false)
+        var date = this.getDate()
+        var items = []
+        for (var i = 0; i < this.items.length; i++) {
+            var item = {
+                cost: this.items[i].cost,
+                type: this.items[i].type,
+                name: this.items[i].name
+            }
+            items.push(item)
+        }
+        var storage = 'items-' + date;
+        window.localStorage.setItem(storage, JSON.stringify( items))
+    },
+    getDate () {
+        var d = new Date()
+        var month = d.getMonth() + 1
+        var day = d.getDate()
+        return month + '-' + day
     },
     removeItem () {
         this.$store.dispatch('popItem')

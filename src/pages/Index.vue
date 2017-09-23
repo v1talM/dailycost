@@ -22,6 +22,21 @@ export default {
     },
     components: {
         DayLines, DayAndCost, DayNotes, NumberArea
+    },
+    created () {
+        var date = this.getDate()
+        var storage = 'items-'+date
+        var items = window.localStorage.getItem(storage)
+        items = JSON.parse(items) || []
+        this.$store.dispatch('initItems', items)
+    },
+    methods: {
+        getDate () {
+            var d = new Date()
+            var month = d.getMonth() + 1
+            var day = d.getDate()
+            return month + '-' + day
+        }
     }
 }
 </script>
