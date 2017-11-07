@@ -1,7 +1,11 @@
 const state = {
   isEditItem: false,
   items: [],
-  activeItem:  { type: 'tag', name: '一 般', cost: 0 }
+  activeItem:  { type: 'tag', name: '一 般', cost: 0 },
+  date: '',
+  chartData: [],
+  last: '',
+  first: ''
 }
 
 const mutations = {
@@ -42,6 +46,18 @@ const mutations = {
   },
   init_items(state, items){
       state.items = items
+  },
+  set_date(state, date) {
+      state.date = date
+  },
+  set_chart_data (state, data) {
+      state.chartData = data
+  },
+  set_chart_date_last (state, date) {
+      state.last = date
+  },
+  set_chart_date_first (state, date) {
+      state.first = date
   }
 }
 
@@ -81,6 +97,18 @@ const actions = {
   },
   initItems({commit}, items) {
       commit('init_items', items)
+  },
+  setDate({commit}, date) {
+      commit('set_date', date)
+  },
+  setChartData({commit}, data) {
+      commit('set_chart_data', data)
+  },
+  setChartDateLast({commit}, date) {
+      commit('set_chart_date_last', date)
+  },
+  setChartDateFirst({commit}, date) {
+      commit('set_chart_date_first', date)
   }
 }
 

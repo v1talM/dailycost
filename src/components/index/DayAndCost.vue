@@ -20,7 +20,8 @@ export default {
   computed: {
     ...mapState({
       isEditItem: state => state.items.isEditItem,
-      items: state => state.items.items
+      items: state => state.items.items,
+      date: state => state.items.date
    }),
    costCount () {
        var count = 0
@@ -30,7 +31,7 @@ export default {
        return count.toFixed(2)
    },
    getDate () {
-       var d = new Date()
+       var d =new Date(this.date)
        var month = d.getMonth() + 1
        var day = d.getDate()
        return month + '-' + day

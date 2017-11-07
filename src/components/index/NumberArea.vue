@@ -96,7 +96,8 @@ export default {
   computed: {
     ...mapState({
       items: state => state.items.items,
-      isEditItem: state => state.items.isEditItem
+      isEditItem: state => state.items.isEditItem,
+      date: state => state.items.date
     }),
     hasNumbers () {
       if(this.items[0] == null || this.items[0].cost == '0' ){
@@ -195,10 +196,10 @@ export default {
             items.push(item)
         }
         var storage = 'items-' + date;
-        window.localStorage.setItem(storage, JSON.stringify( items))
+        window.localStorage.setItem(storage, JSON.stringify(items))
     },
     getDate () {
-        var d = new Date()
+        var d = new Date(this.date)
         var month = d.getMonth() + 1
         var day = d.getDate()
         return month + '-' + day
@@ -218,7 +219,7 @@ export default {
     bottom: 0
     width: 100%
     display: flex
-    z-index: 1000
+    z-index: 1001
     .operation-area
       display: flex
       flex: 1

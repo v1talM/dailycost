@@ -9,12 +9,12 @@
     export default {
         computed: mapState({
             items: state => state.items.items,
-            isEditItem: state =>state.items.isEditItem
+            isEditItem: state =>state.items.isEditItem,
+            chartData: state => state.items.chartData
         }),
         data () {
             return {
-                date: ['09-10', '09-11', '09-12', '09-13', '09-14', '09-15', '09-16'],
-                datas: [0,0,0,0,0,0,0],
+                date: [],
                 myChart: null
             }
         },
@@ -25,10 +25,9 @@
                     for (var i = 0; i < this.items.length; i++) {
                         cost += parseFloat(this.items[i].cost)
                     }
-                    this.datas[3] = cost
                     this.myChart.setOption({
                         xAxis: {
-                            show: false,
+                            show: true,
                             data: this.date,
                             axisPointer: {
                                 show : true
@@ -40,7 +39,38 @@
                         },
                         series: [{
                             type: 'line',
-                            data: this.datas
+                            data: this.chartData
+                        }],
+                        itemStyle: {
+                            normal: {
+                                // 设置折线的颜色
+                                color: '#fff',
+                            }
+                        }
+                    });
+                }
+            },
+            chartData () {
+                if (! this.isEditItem) {
+                    var cost = 0;
+                    for (var i = 0; i < this.items.length; i++) {
+                        cost += parseFloat(this.items[i].cost)
+                    }
+                    this.myChart.setOption({
+                        xAxis: {
+                            show: true,
+                            data: this.date,
+                            axisPointer: {
+                                show : true
+                            }
+                        },
+                        backgroundColor: 'transparent',
+                        yAxis: {
+                            show: false,
+                        },
+                        series: [{
+                            type: 'line',
+                            data: this.chartData
                         }],
                         itemStyle: {
                             normal: {
@@ -53,11 +83,17 @@
             }
         },
         mounted () {
+            var storage = window.localStorage
+            var store = []
+            for (var item in storage) {
+                if (item.search('item') != -1) {
+                    store.push(storage[item])
+                }
+            }
             var cost = 0;
             for (var i = 0; i < this.items.length; i++) {
                 cost += parseFloat(this.items[i].cost)
             }
-            this.datas[3] = cost
             var echarts = require('echarts');
             var c = document.getElementById('myChart')
             var myChart = echarts.init(c)
@@ -76,7 +112,7 @@
                 },
                 series: [{
                     type: 'line',
-                    data: this.datas
+                    data: this.chartData
                 }],
                 itemStyle: {
                     normal: {
