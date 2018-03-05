@@ -6,13 +6,10 @@
           <h2 class="login-header">登 录</h2>
 
           <form class="login-container">
-            <p><input type="email" placeholder="Email"></p>
-            <p><input type="password" placeholder="Password"></p>
-
+            <p><input type="email" v-model="email" placeholder="Email"></p>
+            <p><input type="password" v-model="password" placeholder="Password"></p>
             <p>
-                    <router-link :to="{ name: 'Index', params: {} }">
-                        <input type="submit" value="登 录">
-                    </router-link>
+                <input type="button" @click="handleLogin" value="登 录">
             </p>
           </form>
         </div>
@@ -21,7 +18,28 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
+  data () {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    ...mapActions({
+      set_islogin: 'setIsLogin',
+    }),
+    handleLogin (e) {
+      if (this.email == "" || this.password == "") {
+        alert("用户名或密码不能为空")
+        return false;
+      }
+      this.$router.push('/')
+      this.set_islogin(true)
+    },
+
+  }
 }
 </script>
 
