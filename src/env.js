@@ -32,3 +32,8 @@ export const item_types =  [
     ]
   ],
 ]
+
+export const user_info = {
+    name: "Sun of beach",
+    info: "说点什么吧..."
+}

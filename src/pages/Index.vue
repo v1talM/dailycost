@@ -6,11 +6,7 @@
     <day-and-cost ></day-and-cost>
     <day-notes></day-notes>
     <number-area v-show="isEditItem"></number-area>
-
-    <router-link :to="{ name: 'login', params: {} }" class="login-btn">
-        <i class="el-icon-upload"></i>
-    </router-link>
-
+    <i class="el-icon-upload login-btn" @click="userInfo"></i>
   </div>
 </template>
 
@@ -37,7 +33,8 @@ export default {
             date: state => state.items.date,
             chartData: state => state.items.chartData,
             first: state => state.items.first,
-            last: state => state.items.last
+            last: state => state.items.last,
+            isLogin: state => state.common.isLogin,
         })
     },
     components: {
@@ -110,7 +107,7 @@ export default {
 
              this.setFirstDate(this.first)
           },
-         initChartData () {
+        initChartData () {
              let date = this.getWeeks()
              let costs = []
              for (var item in date) {
@@ -120,7 +117,7 @@ export default {
              }
              this.$store.dispatch('setChartData', costs)
          },
-         getWeeks () {
+        getWeeks () {
              var date = new Date();
              var month = date.getMonth() + 1
              var day = date.getDate()
@@ -151,7 +148,7 @@ export default {
               var date = [past3, past2, past1, today, future1, future2, future3]
               return date
          },
-         getCost (data) {
+        getCost (data) {
                 if (data == null) {
                     return 0
                 }
@@ -162,7 +159,7 @@ export default {
                 }
                 return cost
          },
-         setLastDate (last) {
+        setLastDate (last) {
              var date = new Date(last)
              date.setDate(date.getDate() + 1)
              var first = new Date(last)
@@ -184,7 +181,7 @@ export default {
              newChartData.push(cost)
              this.$store.dispatch('setChartData', newChartData)
          },
-         setFirstDate (first) {
+        setFirstDate (first) {
              var date = new Date(first)
              date.setDate(date.getDate() - 1)
              var last = new Date(first)
@@ -205,7 +202,14 @@ export default {
              newChartData.pop()
              newChartData.unshift(cost)
              this.$store.dispatch('setChartData', newChartData)
-         }
+         },
+        userInfo () {
+          if (this.isLogin) {
+            this.$router.push('user')
+          } else {
+            this.$router.push('login')
+          }
+        }
     }
 }
 </script>
@@ -223,4 +227,5 @@ export default {
       border-radius: 50%
       font-size: 2rem
       z-index: 1000
+      text-align: center
 </style>

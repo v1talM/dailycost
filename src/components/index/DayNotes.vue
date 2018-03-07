@@ -18,10 +18,10 @@
               <el-carousel indicator-position="outside" arrow="never" :autoplay="false" trigger="click">
                 <el-carousel-item v-for="types in item_types" :key="types">
                   <div class="types-container">
-                    <div class="column" v-for="column in types" :key="column">
+                    <div class="column" v-for="column in types">
                       <el-button v-for="(type, index) in column"
                         @click="setActive(type, $event)"
-                        :key="type"
+                        :key="index"
                         :class="{active: type.type == 'tag'}">
                         <icon :name="type.type" width="2rem" height="2rem"></icon>
                         <p class="text-xs">{{ type.name }}</p>
@@ -34,7 +34,7 @@
                 </el-carousel-item>
               </el-carousel>
             </div>
-            <div class="item" v-for="item in items">
+            <div class="item" v-for="item in items" :key="item">
               <div class="text-lg item-title">
                   <el-tag v-show="item.name">{{ item.name}}</el-tag>
                 <input class="item-cost" id="cost" readonly type="text" v-model="item.cost" autofocus>

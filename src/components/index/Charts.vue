@@ -27,7 +27,7 @@
                     }
                     this.myChart.setOption({
                         xAxis: {
-                            show: true,
+                            show: false,
                             data: this.date,
                             axisPointer: {
                                 show : true
@@ -58,7 +58,7 @@
                     }
                     this.myChart.setOption({
                         xAxis: {
-                            show: true,
+                            show: false,
                             data: this.date,
                             axisPointer: {
                                 show : true
